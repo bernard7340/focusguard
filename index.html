@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusGuard - App & Website Blocker</title>
+    <meta name="theme-color" content="#5D5CDE">
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkZvY3VzR3VhcmQgLSBBcHAgJiBXZWJzaXRlIEJsb2NrZXIiLAogICJzaG9ydF9uYW1lIjogIkZvY3VzR3VhcmQiLAogICJkZXNjcmlwdGlvbiI6ICJTdGF5IGZvY3VzZWQsIHN0YXkgcHJvZHVjdGl2ZSIsCiAgInN0YXJ0X3VybCI6ICIuLyIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiI2ZmZmZmZiIsCiAgInRoZW1lX2NvbG9yIjogIiM1RDVDREUiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUIzYVdSMGFEMGlNakEwSWlCb1pXbG5hSFE5SWpJd05DSWdkbWxsZDBKdmVEMGlNQ0F3SURJd05DQXlNRFFpSUdacGJHdzlJaU0xUkRWRFJFVWlQanhqYVhKamJHVWdZM2c5SWpFd01pSWdZM2s5SWpFd01pSWdjajBpT1RBaVBqeDBaWGgwSUhnOUlqRXdNaUlnZVQwaU1URXlJaUJtYVd4c1BTSWpabVptSWlCbWIyNTBMV1poYldsc2VUMGlZWEpwWVd3aUlIUmxlSFF0WVc1amFHOXlQU0p0YVdSa2JHVWlQanByUEM5MFpYaDBQanh2Y21OZGFrNXZaR1VnWTNnOUlqRXdNaUlnWTNrOUlqRXdNaUlnY2owOUlqUXpJaUJqYkdGemN6MGlZa0ZuY2tKa1pTSXZQanh2Y21OZGFrNXZaR1VnWTNnOUlqRXdNaUlnWTNrOUlqRXdNaUlnY2owOUlqVXpJaUJqYkdGemN6MGlhbVoyZDNKa2FuTWlJaTQrUEM5emRtYysiLAogICAgICAic2l6ZXMiOiAiMTkyeDE5MiIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9LAogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjNhV1IwYUQwaU5URXlJaUJvWldsbmFIUTlJalV4TWlJZ2RtbGxkMEp2ZUQwaU1DQXdJRFV4TWlBMU1USWlJR1pwYkd3OUlpTTFSRFZEUkVVaVBqeGphWEpqYkdVZ1kzZzlJakkxTmlJZ1kzazlJakkxTmlJZ2NqMGlNakV3SWo0OGRHVjRkQ0I0UFNJeU5UWWlJSGs5SWpJeU9TSWdabWxzYkQwaVAyWm1abWlJR1p2Ym5RdFptRnRhV3g1UFNKaGNtbGhiQ0lnZEdWNGRDMWhibU5vYjNJOUltMXBaR1JzWlNJK3BrTTlMMlI0ZEFWaFBBWWxRMWxlUVhWV1FVeE9hRkIwYXpjaWJHRnpjejBpWWtGblkwSmtaU0l2UGp4dmNtTmRhazV2WkdVZ1kzZzlJakkxTmlJZ1kzazlJakkxTmlJZ2NqMGlNVEEwSWlCallXeGhjejBpYWtaemFTMHRhMUYzYnpCZ1lTSXZQanh2Y21OZGFrNXZaR1VnWTNnOUlqSTFOaUlnWTNrOUlqSTFOaUlnY2owOUlqRXlOaUlnWTJ4aGMzTTlJamw1VkVOV2VVSWdNa0ZsYVNJdlBqd3ZjM1puUGc9PSIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2Uvc3ZnK3htbCIKICAgIH0KICBdCn0=">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#5D5CDE',
+                        'primary-dark': '#4845B8'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .app-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 14px;
+        }
+        
+        .blocked-overlay {
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid #ef4444;
+        }
+        
+        .timer-ring {
+            transform: rotate(-90deg);
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        body { margin: 0; padding: 0; }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+    <div class="max-w-md mx-auto bg-white dark:bg-gray-800 min-h-screen shadow-lg">
+        <!-- Header -->
+        <div class="bg-primary text-white p-4 text-center">
+            <h1 class="text-xl font-bold">🛡️ FocusGuard</h1>
+            <p class="text-sm opacity-90">Stay focused, stay productive</p>
+        </div>
+
+        <!-- Main Content -->
+        <div id="mainContent" class="p-4">
+            <!-- Home Screen -->
+            <div id="homeScreen" class="space-y-6">
+                <!-- Active Blocks Summary -->
+                <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+                    <h3 class="font-semibold text-red-800 dark:text-red-300 mb-2">🚫 Active Blocks</h3>
+                    <div id="activeBlocksSummary" class="space-y-2 text-sm">
+                        <p class="text-gray-600 dark:text-gray-400">No active blocks</p>
+                    </div>
+                </div>
+
+                <!-- Main Actions -->
+                <div class="grid grid-cols-1 gap-4">
+                    <button onclick="showScreen('blockApps')" class="bg-primary hover:bg-primary-dark text-white p-6 rounded-lg text-center transition-colors">
+                        <div class="text-3xl mb-2">📱</div>
+                        <h3 class="font-semibold text-lg">Block Apps</h3>
+                        <p class="text-sm opacity-90">Block installed applications</p>
+                    </button>
+                    
+                    <button onclick="showScreen('blockWebsites')" class="bg-primary hover:bg-primary-dark text-white p-6 rounded-lg text-center transition-colors">
+                        <div class="text-3xl mb-2">🌐</div>
+                        <h3 class="font-semibold text-lg">Block Websites</h3>
+                        <p class="text-sm opacity-90">Block websites & search content</p>
+                    </button>
+                </div>
+
+                <!-- Settings -->
+                <button onclick="showScreen('settings')" class="w-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 p-4 rounded-lg text-center transition-colors">
+                    <div class="text-2xl mb-1">⚙️</div>
+                    <span class="font-medium">Settings</span>
+                </button>
+            </div>
+
+            <!-- Block Apps Screen -->
+            <div id="blockAppsScreen" class="hidden">
+                <div class="flex items-center mb-4">
+                    <button onclick="showScreen('home')" class="text-primary hover:text-primary-dark text-2xl mr-3">←</button>
+                    <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200">Block Apps</h2>
+                </div>
+
+                <div class="mb-4">
+                    <input type="text" id="appSearch" placeholder="Search apps..." class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-base">
+                </div>
+
+                <div id="appsList" class="space-y-2">
+                    <!-- Apps will be populated by JavaScript -->
+                </div>
+
+                <div id="selectedAppsActions" class="hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-4">
+                    <div class="max-w-md mx-auto">
+                        <button onclick="showBlockDuration('apps')" class="w-full bg-red-500 hover:bg-red-600 text-white p-3 rounded-lg font-medium">
+                            Block Selected Apps (<span id="selectedAppCount">0</span>)
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Block Websites Screen -->
+            <div id="blockWebsitesScreen" class="hidden">
+                <div class="flex items-center mb-4">
+                    <button onclick="showScreen('home')" class="text-primary hover:text-primary-dark text-2xl mr-3">←</button>
+                    <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200">Block Websites</h2>
+                </div>
+
+                <!-- SafeSearch Control -->
+                <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
+                    <h3 class="font-semibold text-blue-800 dark:text-blue-300 mb-3">🔍 SafeSearch Control</h3>
+                    <div class="space-y-2">
+                        <label class="flex items-center">
+                            <input type="radio" name="safesearch" value="off" class="mr-2" onchange="updateSafeSearch(this.value)">
+                            <span class="text-sm">Off - All results visible</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="safesearch" value="blur" class="mr-2" checked onchange="updateSafeSearch(this.value)">
+                            <span class="text-sm">Blur - Inappropriate content blurred</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="safesearch" value="filter" class="mr-2" onchange="updateSafeSearch(this.value)">
+                            <span class="text-sm">Filter - Inappropriate content blocked</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Manual Website Blocking -->
+                <div class="mb-6">
+                    <h3 class="font-semibold text-gray-800 dark:text-gray-200 mb-3">Block Specific Websites</h3>
+                    <div class="flex gap-2 mb-3">
+                        <input type="text" id="websiteInput" placeholder="Enter website (e.g., youtube.com)" class="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-base">
+                        <button onclick="addWebsite()" class="bg-primary hover:bg-primary-dark text-white px-4 py-3 rounded-lg">Add</button>
+                    </div>
+                </div>
+
+                <!-- Keyword Blocking -->
+                <div class="mb-6">
+                    <h3 class="font-semibold text-gray-800 dark:text-gray-200 mb-3">Block Keywords</h3>
+                    <div class="flex gap-2 mb-3">
+                        <input type="text" id="keywordInput" placeholder="Enter keyword to block" class="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-base">
+                        <button onclick="addKeyword()" class="bg-primary hover:bg-primary-dark text-white px-4 py-3 rounded-lg">Add</button>
+                    </div>
+                </div>
+
+                <!-- Blocked Items List -->
+                <div id="blockedItemsList" class="space-y-2">
+                    <!-- Blocked items will be populated here -->
+                </div>
+
+                <div id="selectedWebsitesActions" class="hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-4">
+                    <div class="max-w-md mx-auto">
+                        <button onclick="showBlockDuration('websites')" class="w-full bg-red-500 hover:bg-red-600 text-white p-3 rounded-lg font-medium">
+                            Block Selected Items (<span id="selectedWebsiteCount">0</span>)
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Block Duration Screen -->
+            <div id="blockDurationScreen" class="hidden">
+                <div class="flex items-center mb-4">
+                    <button onclick="goBack()" class="text-primary hover:text-primary-dark text-2xl mr-3">←</button>
+                    <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200">Set Block Duration</h2>
+                </div>
+
+                <div class="space-y-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Duration</label>
+                        <select id="durationValue" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-base">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="12">12</option>
+                            <option value="24">24</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Unit</label>
+                        <select id="durationUnit" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-base">
+                            <option value="hours">Hours</option>
+                            <option value="days">Days</option>
+                            <option value="weeks">Weeks</option>
+                            <option value="months">Months</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="confirmationSummary" class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 mb-6">
+                    <h3 class="font-semibold text-yellow-800 dark:text-yellow-300 mb-2">⚠️ Confirmation Required</h3>
+                    <p class="text-sm text-yellow-700 dark:text-yellow-300 mb-3">You are about to block the following items:</p>
+                    <div id="itemsToBlock" class="text-sm space-y-1 mb-3"></div>
+                    <p class="text-sm text-yellow-700 dark:text-yellow-300">Duration: <span id="durationSummary"></span></p>
+                </div>
+
+                <button onclick="showPartnerCodeDialog()" class="w-full bg-red-500 hover:bg-red-600 text-white p-3 rounded-lg font-medium">
+                    Confirm Block (Requires Partner Code)
+                </button>
+            </div>
+
+            <!-- Settings Screen -->
+            <div id="settingsScreen" class="hidden">
+                <div class="flex items-center mb-4">
+                    <button onclick="showScreen('home')" class="text-primary hover:text-primary-dark text-2xl mr-3">←</button>
+                    <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200">Settings</h2>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                        <h3 class="font-semibold text-gray-800 dark:text-gray-200 mb-2">Partner Code</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">The partner code is required to confirm blocks and unlock items early. Default: mimi123</p>
+                        <button onclick="showChangeCodeDialog()" class="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg text-sm">
+                            Change Partner Code
+                        </button>
+                    </div>
+
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                        <h3 class="font-semibold text-gray-800 dark:text-gray-200 mb-2">Emergency Unlock</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Unlock all blocks early (requires partner code).</p>
+                        <button onclick="showEmergencyUnlockDialog()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm">
+                            Emergency Unlock
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    
+    <!-- Partner Code Modal -->
+    <div id="partnerCodeModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-sm w-full p-6">
+            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4">Enter Partner Code</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Partner code is required to confirm this action.</p>
+            <input type="password" id="partnerCodeInput" placeholder="Enter code" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-base mb-4">
+            <div id="codeError" class="hidden text-red-500 text-sm mb-4">Incorrect code. Please try again.</div>
+            <div class="flex gap-3">
+                <button onclick="closeModal('partnerCodeModal')" class="flex-1 px-4 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">Cancel</button>
+                <button onclick="confirmPartnerCode()" class="flex-1 px-4 py-2 bg-primary text-white hover:bg-primary-dark rounded-lg">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Code Modal -->
+    <div id="changeCodeModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-sm w-full p-6">
+            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4">Change Partner Code</h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Current Code</label>
+                    <input type="password" id="currentCodeInput" placeholder="Enter current code" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-base">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">New Code</label>
+                    <input type="password" id="newCodeInput" placeholder="Enter new code" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-base">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Confirm New Code</label>
+                    <input type="password" id="confirmCodeInput" placeholder="Confirm new code" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-base">
+                </div>
+            </div>
+            <div id="changeCodeError" class="hidden text-red-500 text-sm mt-2"></div>
+            <div class="flex gap-3 mt-6">
+                <button onclick="closeModal('changeCodeModal')" class="flex-1 px-4 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">Cancel</button>
+                <button onclick="changePartnerCode()" class="flex-1 px-4 py-2 bg-primary text-white hover:bg-primary-dark rounded-lg">Change Code</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-sm w-full p-6 text-center">
+            <div class="text-4xl mb-4">✅</div>
+            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">Block Activated!</h3>
+            <p id="successMessage" class="text-sm text-gray-600 dark:text-gray-400 mb-4"></p>
+            <button onclick="closeModal('successModal'); showScreen('home')" class="w-full px-4 py-2 bg-primary text-white hover:bg-primary-dark rounded-lg">OK</button>
+        </div>
+    </div>
+
+    <script>
+        // Data storage
+        let partnerCode = 'mimi123'; // Default code for demo
+        let blockedApps = [];
+        let blockedWebsites = [];
+        let blockedKeywords = [];
+        let selectedApps = [];
+        let selectedWebsites = [];
+        let currentScreen = 'home';
+        let pendingAction = null;
+        let safeSearchMode = 'blur';
+
+        // Sample apps data
+        const sampleApps = [
+            { name: 'Instagram', package: 'com.instagram.android', icon: '📸', color: '#E4405F' },
+            { name: 'TikTok', package: 'com.zhiliaoapp.musically', icon: '🎵', color: '#000000' },
+            { name: 'YouTube', package: 'com.google.android.youtube', icon: '▶️', color: '#FF0000' },
+            { name: 'Facebook', package: 'com.facebook.katana', icon: '📘', color: '#1877F2' },
+            { name: 'Twitter', package: 'com.twitter.android', icon: '🐦', color: '#1DA1F2' },
+            { name: 'Snapchat', package: 'com.snapchat.android', icon: '👻', color: '#FFFC00' },
+            { name: 'WhatsApp', package: 'com.whatsapp', icon: '💬', color: '#25D366' },
+            { name: 'Reddit', package: 'com.reddit.frontpage', icon: '🤖', color: '#FF4500' },
+            { name: 'Telegram', package: 'org.telegram.messenger', icon: '✈️', color: '#0088CC' },
+            { name: 'Discord', package: 'com.discord', icon: '🎮', color: '#5865F2' }
+        ];
+
+        // Dark mode support
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+
+        // Screen navigation
+        function showScreen(screenName) {
+            document.querySelectorAll('#mainContent > div').forEach(screen => {
+                screen.classList.add('hidden');
+            });
+            
+            if (screenName === 'home') {
+                document.getElementById('homeScreen').classList.remove('hidden');
+                updateHomeScreen();
+            } else if (screenName === 'blockApps') {
+                document.getElementById('blockAppsScreen').classList.remove('hidden');
+                loadApps();
+            } else if (screenName === 'blockWebsites') {
+                document.getElementById('blockWebsitesScreen').classList.remove('hidden');
+                updateBlockedItemsList();
+            } else if (screenName === 'settings') {
+                document.getElementById('settingsScreen').classList.remove('hidden');
+            } else if (screenName === 'blockDuration') {
+                document.getElementById('blockDurationScreen').classList.remove('hidden');
+                updateDurationSummary();
+            }
+            
+            currentScreen = screenName;
+        }
+
+        function goBack() {
+            if (currentScreen === 'blockDuration') {
+                if (pendingAction === 'apps') {
+                    showScreen('blockApps');
+                } else {
+                    showScreen('blockWebsites');
+                }
+            }
+        }
+
+        // Apps functionality
+        function loadApps() {
+            const appsList = document.getElementById('appsList');
+            appsList.innerHTML = '';
+            
+            sampleApps.forEach(app => {
+                const isBlocked = blockedApps.some(blocked => blocked.package === app.package);
+                const isSelected = selectedApps.includes(app.package);
+                
+                const appElement = document.createElement('div');
+                appElement.className = `flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-lg cursor-pointer transition-all ${
+                    isBlocked ? 'blocked-overlay opacity-50' : ''
+                } ${isSelected ? 'bg-primary bg-opacity-10 border-primary' : 'bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600'}`;
+                
+                appElement.innerHTML = `
+                    <div class="app-icon mr-3" style="background-color: ${app.color}">
+                        ${app.icon}
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-medium text-gray-800 dark:text-gray-200">${app.name}</div>
+                        <div class="text-sm text-gray-500 dark:text-gray-400">${app.package}</div>
+                    </div>
+                    ${isBlocked ? '<div class="text-red-500 font-medium">🚫 BLOCKED</div>' : ''}
+                    ${!isBlocked ? `<input type="checkbox" ${isSelected ? 'checked' : ''} class="w-5 h-5 text-primary">` : ''}
+                `;
+                
+                if (!isBlocked) {
+                    appElement.addEventListener('click', () => toggleAppSelection(app.package));
+                }
+                
+                appsList.appendChild(appElement);
+            });
+            
+            updateSelectedAppsUI();
+        }
+
+        function toggleAppSelection(packageName) {
+            const index = selectedApps.indexOf(packageName);
+            if (index > -1) {
+                selectedApps.splice(index, 1);
+            } else {
+                selectedApps.push(packageName);
+            }
+            loadApps();
+        }
+
+        function updateSelectedAppsUI() {
+            const count = selectedApps.length;
+            const actionsDiv = document.getElementById('selectedAppsActions');
+            const countSpan = document.getElementById('selectedAppCount');
+            
+            if (count > 0) {
+                actionsDiv.classList.remove('hidden');
+                countSpan.textContent = count;
+            } else {
+                actionsDiv.classList.add('hidden');
+            }
+        }
+
+        // Website functionality
+        function addWebsite() {
+            const input = document.getElementById('websiteInput');
+            const website = input.value.trim();
+            
+            if (website) {
+                if (!selectedWebsites.includes(website)) {
+                    selectedWebsites.push(website);
+                    input.value = '';
+                    updateBlockedItemsList();
+                    updateSelectedWebsitesUI();
+                }
+            }
+        }
+
+        function addKeyword() {
+            const input = document.getElementById('keywordInput');
+            const keyword = input.value.trim();
+            
+            if (keyword) {
+                if (!selectedWebsites.includes(`keyword:${keyword}`)) {
+                    selectedWebsites.push(`keyword:${keyword}`);
+                    input.value = '';
+                    updateBlockedItemsList();
+                    updateSelectedWebsitesUI();
+                }
+            }
+        }
+
+        function updateBlockedItemsList() {
+            const container = document.getElementById('blockedItemsList');
+            container.innerHTML = '';
+            
+            // Show already blocked items
+            [...blockedWebsites, ...blockedKeywords].forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg';
+                div.innerHTML = `
+                    <div>
+                        <div class="font-medium text-red-800 dark:text-red-300">${item.type === 'website' ? '🌐' : '🔤'} ${item.value}</div>
+                        <div class="text-sm text-red-600 dark:text-red-400">Blocked for ${formatTimeRemaining(item.endTime)}</div>
+                    </div>
+                    <button onclick="showUnlockDialog('${item.type}', '${item.value}')" class="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-200">🔓</button>
+                `;
+                container.appendChild(div);
+            });
+            
+            // Show selected items to be blocked
+            selectedWebsites.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg';
+                const isKeyword = item.startsWith('keyword:');
+                const displayValue = isKeyword ? item.replace('keyword:', '') : item;
+                
+                div.innerHTML = `
+                    <div>
+                        <div class="font-medium text-yellow-800 dark:text-yellow-300">${isKeyword ? '🔤' : '🌐'} ${displayValue}</div>
+                        <div class="text-sm text-yellow-600 dark:text-yellow-400">Ready to block</div>
+                    </div>
+                    <button onclick="removeSelectedWebsite('${item}')" class="text-yellow-600 dark:text-yellow-400 hover:text-yellow-800 dark:hover:text-yellow-200">❌</button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function removeSelectedWebsite(item) {
+            const index = selectedWebsites.indexOf(item);
+            if (index > -1) {
+                selectedWebsites.splice(index, 1);
+                updateBlockedItemsList();
+                updateSelectedWebsitesUI();
+            }
+        }
+
+        function updateSelectedWebsitesUI() {
+            const count = selectedWebsites.length;
+            const actionsDiv = document.getElementById('selectedWebsitesActions');
+            const countSpan = document.getElementById('selectedWebsiteCount');
+            
+            if (count > 0) {
+                actionsDiv.classList.remove('hidden');
+                countSpan.textContent = count;
+            } else {
+                actionsDiv.classList.add('hidden');
+            }
+        }
+
+        function updateSafeSearch(mode) {
+            if (safeSearchMode !== mode) {
+                // Show partner code dialog for SafeSearch changes
+                pendingAction = { type: 'safesearch', mode: mode };
+                showModal('partnerCodeModal');
+            }
+        }
+
+        // Block duration functionality
+        function showBlockDuration(type) {
+            pendingAction = type;
+            showScreen('blockDuration');
+        }
+
+        function updateDurationSummary() {
+            const value = document.getElementById('durationValue').value;
+            const unit = document.getElementById('durationUnit').value;
+            const summary = `${value} ${unit}`;
+            document.getElementById('durationSummary').textContent = summary;
+            
+            // Update items to block
+            const itemsContainer = document.getElementById('itemsToBlock');
+            itemsContainer.innerHTML = '';
+            
+            if (pendingAction === 'apps') {
+                selectedApps.forEach(packageName => {
+                    const app = sampleApps.find(a => a.package === packageName);
+                    const div = document.createElement('div');
+                    div.className = 'text-yellow-700 dark:text-yellow-300';
+                    div.textContent = `📱 ${app.name}`;
+                    itemsContainer.appendChild(div);
+                });
+            } else {
+                selectedWebsites.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'text-yellow-700 dark:text-yellow-300';
+                    const isKeyword = item.startsWith('keyword:');
+                    const displayValue = isKeyword ? item.replace('keyword:', '') : item;
+                    div.textContent = `${isKeyword ? '🔤' : '🌐'} ${displayValue}`;
+                    itemsContainer.appendChild(div);
+                });
+            }
+        }
+
+        // Modal functionality
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+            setTimeout(() => {
+                const input = document.querySelector(`#${modalId} input[type="password"]`);
+                if (input) input.focus();
+            }, 100);
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+            // Reset form
+            document.querySelectorAll(`#${modalId} input`).forEach(input => {
+                input.value = '';
+                input.classList.remove('shake');
+            });
+            document.querySelectorAll(`#${modalId} .hidden`).forEach(el => {
+                if (el.textContent.includes('error') || el.textContent.includes('Error')) {
+                    el.classList.add('hidden');
+                }
+            });
+            
+            // Reset SafeSearch radio if changed
+            if (modalId === 'partnerCodeModal' && pendingAction?.type === 'safesearch') {
+                document.querySelector(`input[name="safesearch"][value="${safeSearchMode}"]`).checked = true;
+            }
+        }
+
+        function showPartnerCodeDialog() {
+            showModal('partnerCodeModal');
+        }
+
+        function confirmPartnerCode() {
+            const inputCode = document.getElementById('partnerCodeInput').value;
+            const errorDiv = document.getElementById('codeError');
+            
+            if (inputCode === partnerCode) {
+                closeModal('partnerCodeModal');
+                
+                if (pendingAction?.type === 'safesearch') {
+                    // Update SafeSearch mode
+                    safeSearchMode = pendingAction.mode;
+                    showSuccessMessage(`SafeSearch mode changed to: ${pendingAction.mode}`);
+                } else if (pendingAction?.type === 'emergency_unlock') {
+                    // Emergency unlock
+                    blockedApps = [];
+                    blockedWebsites = [];
+                    blockedKeywords = [];
+                    showSuccessMessage('All blocks have been removed!');
+                    updateHomeScreen();
+                } else {
+                    // Proceed with blocking
+                    executeBlock();
+                }
+                
+                pendingAction = null;
+            } else {
+                errorDiv.classList.remove('hidden');
+                document.getElementById('partnerCodeInput').classList.add('shake');
+                setTimeout(() => {
+                    document.getElementById('partnerCodeInput').classList.remove('shake');
+                }, 500);
+            }
+        }
+
+        function executeBlock() {
+            const duration = parseInt(document.getElementById('durationValue').value);
+            const unit = document.getElementById('durationUnit').value;
+            
+            // Calculate end time
+            const now = new Date();
+            let endTime = new Date(now);
+            
+            if (unit === 'hours') {
+                endTime.setHours(endTime.getHours() + duration);
+            } else if (unit === 'days') {
+                endTime.setDate(endTime.getDate() + duration);
+            } else if (unit === 'weeks') {
+                endTime.setDate(endTime.getDate() + (duration * 7));
+            } else if (unit === 'months') {
+                endTime.setMonth(endTime.getMonth() + duration);
+            }
+            
+            if (currentScreen === 'blockDuration' && pendingAction === 'apps') {
+                // Block selected apps
+                const numBlocked = selectedApps.length;
+                selectedApps.forEach(packageName => {
+                    const app = sampleApps.find(a => a.package === packageName);
+                    blockedApps.push({
+                        name: app.name,
+                        package: packageName,
+                        endTime: endTime.getTime(),
+                        startTime: now.getTime()
+                    });
+                });
+                selectedApps = [];
+                showSuccessMessage(`${numBlocked} app(s) blocked for ${duration} ${unit}!`);
+            } else {
+                // Block selected websites/keywords
+                const numBlocked = selectedWebsites.length;
+                selectedWebsites.forEach(item => {
+                    const isKeyword = item.startsWith('keyword:');
+                    if (isKeyword) {
+                        blockedKeywords.push({
+                            value: item.replace('keyword:', ''),
+                            endTime: endTime.getTime(),
+                            startTime: now.getTime(),
+                            type: 'keyword'
+                        });
+                    } else {
+                        blockedWebsites.push({
+                            value: item,
+                            endTime: endTime.getTime(),
+                            startTime: now.getTime(),
+                            type: 'website'
+                        });
+                    }
+                });
+                selectedWebsites = [];
+                showSuccessMessage(`${numBlocked} item(s) blocked for ${duration} ${unit}!`);
+            }
+            
+            updateHomeScreen();
+        }
+
+        function showSuccessMessage(message) {
+            document.getElementById('successMessage').textContent = message;
+            showModal('successModal');
+        }
+
+        // Settings functionality
+        function showChangeCodeDialog() {
+            showModal('changeCodeModal');
+        }
+
+        function changePartnerCode() {
+            const current = document.getElementById('currentCodeInput').value;
+            const newCode = document.getElementById('newCodeInput').value;
+            const confirm = document.getElementById('confirmCodeInput').value;
+            const errorDiv = document.getElementById('changeCodeError');
+            
+            if (current !== partnerCode) {
+                errorDiv.textContent = 'Current code is incorrect.';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+            
+            if (newCode.length < 4) {
+                errorDiv.textContent = 'New code must be at least 4 characters.';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+            
+            if (newCode !== confirm) {
+                errorDiv.textContent = 'New codes do not match.';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+            
+            partnerCode = newCode;
+            closeModal('changeCodeModal');
+            showSuccessMessage('Partner code changed successfully!');
+        }
+
+        function showEmergencyUnlockDialog() {
+            pendingAction = { type: 'emergency_unlock' };
+            showModal('partnerCodeModal');
+        }
+
+        // Home screen updates
+        function updateHomeScreen() {
+            const summaryDiv = document.getElementById('activeBlocksSummary');
+            
+            // Clean up expired blocks
+            const now = Date.now();
+            blockedApps = blockedApps.filter(app => app.endTime > now);
+            blockedWebsites = blockedWebsites.filter(site => site.endTime > now);
+            blockedKeywords = blockedKeywords.filter(keyword => keyword.endTime > now);
+            
+            const totalBlocks = blockedApps.length + blockedWebsites.length + blockedKeywords.length;
+            
+            if (totalBlocks === 0) {
+                summaryDiv.innerHTML = '<p class="text-gray-600 dark:text-gray-400">No active blocks</p>';
+            } else {
+                let html = '';
+                
+                blockedApps.forEach(app => {
+                    html += `<div class="flex justify-between items-center">
+                        <span>📱 ${app.name}</span>
+                        <span class="text-xs">${formatTimeRemaining(app.endTime)}</span>
+                    </div>`;
+                });
+                
+                blockedWebsites.forEach(site => {
+                    html += `<div class="flex justify-between items-center">
+                        <span>🌐 ${site.value}</span>
+                        <span class="text-xs">${formatTimeRemaining(site.endTime)}</span>
+                    </div>`;
+                });
+                
+                blockedKeywords.forEach(keyword => {
+                    html += `<div class="flex justify-between items-center">
+                        <span>🔤 ${keyword.value}</span>
+                        <span class="text-xs">${formatTimeRemaining(keyword.endTime)}</span>
+                    </div>`;
+                });
+                
+                summaryDiv.innerHTML = html;
+            }
+        }
+
+        function formatTimeRemaining(endTime) {
+            const now = new Date();
+            const end = new Date(endTime);
+            const diff = end - now;
+            
+            if (diff <= 0) return 'Expired';
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            
+            if (days > 0) return `${days}d ${hours}h`;
+            if (hours > 0) return `${hours}h ${minutes}m`;
+            return `${minutes}m`;
+        }
+
+        // PWA Installation
+        let deferredPrompt;
+        let installButton = null;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            showInstallButton();
+        });
+
+        function showInstallButton() {
+            if (installButton) return;
+            
+            installButton = document.createElement('div');
+            installButton.className = 'fixed bottom-4 right-4 bg-primary text-white px-4 py-2 rounded-lg shadow-lg cursor-pointer z-40 text-sm';
+            installButton.innerHTML = '📱 Install App';
+            installButton.onclick = installApp;
+            document.body.appendChild(installButton);
+        }
+
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the install prompt');
+                        hideInstallButton();
+                    }
+                    deferredPrompt = null;
+                });
+            }
+        }
+
+        function hideInstallButton() {
+            if (installButton) {
+                installButton.remove();
+                installButton = null;
+            }
+        }
+
+        window.addEventListener('appinstalled', (evt) => {
+            hideInstallButton();
+            showSuccessMessage('FocusGuard has been installed!');
+        });
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            showScreen('home');
+            
+            // Update duration summary when values change
+            document.getElementById('durationValue').addEventListener('change', updateDurationSummary);
+            document.getElementById('durationUnit').addEventListener('change', updateDurationSummary);
+            
+            // Enter key handlers
+            document.getElementById('websiteInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') addWebsite();
+            });
+            
+            document.getElementById('keywordInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') addKeyword();
+            });
+            
+            document.getElementById('partnerCodeInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') confirmPartnerCode();
+            });
+            
+            // Update home screen every minute
+            setInterval(updateHomeScreen, 60000);
+        });
+    </script>
+</body>
+</html>
